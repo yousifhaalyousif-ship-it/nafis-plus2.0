@@ -1,5 +1,5 @@
 /* Nafis Plus offline app — works under any GitHub Pages repository path. */
-const VERSION = 'nafis-pwa-2026-11-11-v1';
+const VERSION = 'nafis-pwa-2026-11-11-v4';
 const SHELL = ['', 'index.html', 'manifest.webmanifest', 'pwa.js', 'icons/favicon.png', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 const EXAMS = [];
 for (const grade of ['3', '6', '9']) {

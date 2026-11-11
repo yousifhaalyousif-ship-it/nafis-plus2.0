@@ -33,6 +33,15 @@
 .install-dialog p{font-size:14px;line-height:2;color:#536983;margin:0 0 19px}
 .install-dialog .btn{min-width:120px}
 @media(max-width:740px){.app-header .header-right{gap:8px}.install-btn{padding:8px 10px;font-size:11px;min-height:35px}.install-dialog{padding:22px}}
+
+/* V3 automatic optical mark scanner */
+.scan-photo canvas{cursor:default;max-height:74vh;object-fit:contain;background:#edf2f8}
+.auto-scan-guide{display:grid;gap:9px;margin:18px 0;padding:14px;background:#fff;border:1px solid #dce7f3;border-radius:12px;font-size:11px;color:#557087;line-height:1.65}
+.auto-scan-guide strong{color:#193c61;font-size:12px}
+.auto-scan-guide span::before{content:"✓";color:#13a889;font-weight:900;margin-left:8px}
+#scanStatus{line-height:1.85;font-size:12px;background:#fff;border:1px solid #e2eaf3;border-radius:10px;padding:12px;color:#285271}
+#manualReview{margin-top:9px}
+
 </style>
 </head>
 <body>
@@ -79,15 +88,15 @@
       </section>
 
       <section id="view-grading" class="view hidden">
-        <div class="section-head"><div><h2>تصحيح ورقة الطالب</h2><p>ارفع صورة الورقة ثم حدّد زواياها الأربع لقراءة الدوائر المظللة.</p></div><span class="tag tag-green">معالجة داخل جهازك</span></div>
+        <div class="section-head"><div><h2>تصحيح ورقة الطالب</h2><p>ارفع صورة واضحة لورقة الاختبار وسيحاول النظام قراءة الإجابات تلقائيًا بدون تحديد الزوايا.</p></div><span class="tag tag-green">معالجة داخل جهازك</span></div>
         <div class="grade-panel">
           <div class="grade-config"><label>الصف الدراسي<select id="scanGrade"></select></label><label>المادة<select id="scanSubject"></select></label><label>رقم النموذج<select id="scanExam"></select></label></div>
           <label class="student-name">اسم الطالب <span>(اختياري)</span><input id="studentName" type="text" autocomplete="off" placeholder="اكتب اسم الطالب"></label>
-          <div class="drop-area" id="dropZone"><div class="drop-icon">▧</div><strong>اختر صورة ورقة الطالب</strong><p>صورة واضحة للورقة كاملة، بصيغة JPG أو PNG</p><div class="button-row"><label for="imageInput" class="btn primary-btn upload-action">↑ رفع صورة</label><button id="manualBtn" class="btn outline-btn">تصحيح يدوي</button></div><input id="imageInput" type="file" accept="image/*" class="sr-input"></div>
-          <div id="scanWorkspace" class="hidden"><div class="scan-layout"><div class="scan-photo"><div class="scan-photo-top"><strong>معاينة الصورة</strong><button id="resetCorners" class="text-btn">إعادة تحديد الزوايا</button></div><canvas id="photoCanvas" aria-label="انقر على أركان ورقة الاختبار" title="انقر على أركان الورقة بالترتيب المحدد"></canvas></div><div class="scan-steps"><span class="step-count">خطوة <span id="cornerCount">١</span> من ٤</span><h3>حدّد زوايا الورقة</h3><p>انقر على أركان الورقة في الصورة بهذا الترتيب:</p><div class="corner-guide"><span>١. العلوية اليسرى</span><span>٢. العلوية اليمنى</span><span>٣. السفلية اليمنى</span><span>٤. السفلية اليسرى</span></div><p class="muted">للحصول على نتيجة أفضل: ضع الورقة على سطح مستوٍ وصوّرها كاملة بإضاءة جيدة.</p><button id="scanNow" class="btn primary-btn full-width" disabled>قراءة الإجابات</button><div id="scanStatus" class="small-message">حدد الزاوية الأولى للبدء.</div></div></div></div>
+          <div class="drop-area" id="dropZone"><div class="drop-icon">▧</div><strong>اختر صورة ورقة الطالب</strong><p>صوّر الورقة كاملة وسنقرأ الدوائر تلقائيًا — بلا تحديد زوايا</p><div class="button-row"><label for="imageInput" class="btn primary-btn upload-action">↑ رفع صورة</label><button id="manualBtn" class="btn outline-btn">تصحيح يدوي</button></div><input id="imageInput" type="file" accept="image/*" class="sr-input"></div>
+          <div id="scanWorkspace" class="hidden"><div class="scan-layout"><div class="scan-photo"><div class="scan-photo-top"><strong>معاينة الصورة</strong><span class="tag tag-green">كشف الورقة تلقائيًا</span></div><canvas id="photoCanvas" aria-label="معاينة ورقة الاختبار بعد كشفها تلقائيًا"></canvas></div><div class="scan-steps"><span class="step-count">قراءة تلقائية · بدون تحديد الزوايا</span><h3>فحص الإجابات</h3><p>نبحث عن حدود الورقة ودوائر الإجابات المظللة تلقائيًا، ثم نعرض النتيجة للمراجعة.</p><div class="auto-scan-guide"><strong>لتحصل على قراءة أدق:</strong><span>ضع الورقة على سطح بلون مختلف.</span><span>صوّر الورقة بالكامل من الأعلى بشكل مستقيم.</span><span>ظلّل الدائرة بقلم داكن، وليس إشارة ✓ بجانبها.</span></div><button id="scanNow" class="btn primary-btn full-width">↻ إعادة فحص الصورة</button><button id="manualReview" class="btn outline-btn full-width">مراجعة الإجابات يدويًا</button><div id="scanStatus" class="small-message" role="status" aria-live="polite">اختر صورة لبدء التحليل التلقائي.</div></div></div></div>
           <div id="reviewPanel" class="hidden"><div class="review-head"><div><h3>مراجعة الإجابات</h3><p>تحقّق من النتائج وعدّل أي إجابة غير واضحة قبل الحفظ.</p></div><div class="score-box" id="scoreBox">٠ / ١٠</div></div><div id="reviewQuestions" class="review-grid"></div><div class="review-footer"><span id="unclearCount" class="muted"></span><div class="button-row"><button id="saveResult" class="btn primary-btn">حفظ النتيجة</button><button id="exportResult" class="btn outline-btn">تنزيل تقرير CSV</button></div></div></div>
         </div>
-        <div class="hint-card"><strong>مهم</strong><span>هذه قراءة آلية للدوائر المظللة (OMR)، وليست ذكاءً اصطناعيًا لفهم الإجابات المكتوبة بخط اليد. راجع كل نتيجة قبل اعتمادها.</span></div>
+        <div class="hint-card"><strong>مهم</strong><span>هذه قراءة آلية لدوائر الاختيار من متعدد (OMR) وليست ذكاء اصطناعيًا لفهم الإجابات المكتوبة. لا تحفظ الدرجة قبل مراجعتها، خصوصًا عند وجود إجابات فارغة أو علامات غير واضحة.</span></div>
       </section>
 
       <section id="view-history" class="view hidden"><div class="section-head"><div><h2>سجل النتائج المحفوظة</h2><p>تُحفظ النتائج على هذا المتصفح فقط، ويمكن تصديرها كملف CSV.</p></div><button id="exportHistory" class="btn outline-btn">↓ تصدير السجل</button></div><div id="historyContent" class="history-box"></div></section>
@@ -107,6 +116,150 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 window.NAFIS_BANK={"3":{"math":[["ما ناتج ٧ + ٨؟",["١٣","١٤","١٥","١٦"],2],["ما ناتج ٦ × ٤؟",["٢٠","٢٤","٢٨","٣٠"],1],["ما نصف العدد ٣٠؟",["١٠","١٥","٢٠","٢٥"],1],["أي الأعداد أكبر؟",["١٠٢","١٢٠","١١٢","١٠٩"],1],["ما ناتج ٤٥ - ١٩؟",["٢٤","٢٦","٢٨","٣٠"],1],["كم ضلعًا للمثلث؟",["٣","٤","٥","٦"],0],["ما العدد التالي: ٥، ١٠، ١٥، ...؟",["١٨","٢٠","٢٥","٣٠"],1],["كم دقيقة في الساعة؟",["٣٠","٤٥","٦٠","٩٠"],2],["ما ناتج ٣٦ ÷ ٦؟",["٤","٥","٦","٧"],2],["ما محيط مربع طول ضلعه ٥ سم؟",["١٠","١٥","٢٠","٢٥"],2],["ما العدد السابق للعدد ٧٠٠؟",["٦٩٩","٧٠١","٦٩٠","٧٩٩"],0],["كم عشرات في العدد ٨٠؟",["٤","٦","٨","١٠"],2],["ما ناتج ٩ × ٣؟",["٢٤","٢٧","٣٠","٣٦"],1],["أي مما يلي عدد زوجي؟",["١٧","٣٣","٤٢","٥٥"],2],["ما ناتج ١٠٠ - ٣٥؟",["٥٥","٦٥","٧٥","٨٥"],1],["ما ربع العدد ٢٠؟",["٤","٥","١٠","١٥"],1],["ما الشكل الذي له أربعة أضلاع متساوية؟",["دائرة","مثلث","مربع","مستطيل غير مربع"],2],["كم سنتيمترًا في المتر؟",["١٠","٥٠","١٠٠","١٠٠٠"],2]],"arabic":[["ما مرادف كلمة «سعيد»؟",["حزين","فرح","غاضب","متعب"],1],["ما ضد كلمة «قريب»؟",["بعيد","سريع","جميل","صغير"],0],["أي الكلمات اسم؟",["يلعب","اكتب","مدرسة","يذهب"],2],["ما جمع كلمة «كتاب»؟",["كاتب","مكتبة","كتب","كتابة"],2],["اختر الجملة الصحيحة.",["الطلاب مجتهدون","الطلاب مجتهد","الطلاب مجتهدة","الطلاب مجتهدات"],0],["أي الكلمات تدل على زمان؟",["أمام","اليوم","تحت","خلف"],1],["ما مفرد كلمة «أشجار»؟",["شجرة","شجيرات","شجرات","شجري"],0],["ما علامة نهاية السؤال؟",[".","،","؟","!"],2],["أي الكلمات فعل ماضٍ؟",["يكتب","اكتب","كتب","كاتب"],2],["ما ضد كلمة «الصدق»؟",["الأمانة","الكذب","العدل","الوفاء"],1],["ما جمع كلمة «قلم»؟",["أقلام","قلمان","مقلمة","قلمًا"],0],["أي كلمة تبدأ بحرف «م»؟",["تفاح","مدرسة","بيت","شجرة"],1],["في جملة «السماء صافية»، ما الموصوف؟",["صافية","السماء","في","لا يوجد"],1],["ما ضد كلمة «مرتفع»؟",["عالٍ","منخفض","كبير","بعيد"],1],["أي الكلمات تدل على مكان؟",["غدًا","فوق","الآن","أمس"],1],["أكمل: «ذهبَ الولدُ ... المدرسة».",["إلى","منذ","لو","بل"],0],["ما مفرد كلمة «أصدقاء»؟",["صديقة","صديق","صدقة","صادقون"],1],["أي جملة تحتوي على أسلوب استفهام؟",["الجو جميل.","ما أجمل الجو!","هل قرأت الكتاب؟","اقرأ الكتاب."],2]],"science":[["ما مصدر الضوء الطبيعي للأرض؟",["القمر","الشمس","المصباح","البطارية"],1],["أي الأعضاء يضخ الدم؟",["الرئة","القلب","المعدة","الدماغ"],1],["ما حالة الماء عند التجمد؟",["غاز","سائل","صلب","بخار"],2],["ماذا تحتاج النباتات لصنع غذائها؟",["الضوء","البلاستيك","الحديد","الرمل فقط"],0],["ما الكوكب الذي نعيش عليه؟",["المريخ","الأرض","الزهرة","زحل"],1],["أي الحواس تستخدمها الأذن؟",["البصر","الشم","السمع","اللمس"],2],["ماذا يحدث للماء عند التسخين الشديد؟",["يتبخر","يتجمد","يتحول لحجر","يختفي نهائيًا"],0],["ما وظيفة الجذور؟",["امتصاص الماء","إنتاج الصوت","الطيران","إنتاج الضوء"],0],["أي مما يلي كائن حي؟",["صخرة","قلم","شجرة","كرسي"],2],["أي المواد تنجذب للمغناطيس عادة؟",["الخشب","الحديد","الزجاج","الورق"],1],["ما العضو المستخدم للتنفس؟",["القلب","الرئتان","الكبد","المعدة"],1],["أي الحيوانات يضع البيض؟",["القطة","العصفور","الحصان","الأرنب"],1],["ما المصدر الأساسي للماء في الأنهار؟",["المطر","الرمل","الرياح","الضوء"],0],["أي المواد شفافة؟",["الخشب","الحجر","الزجاج الصافي","الحديد"],2],["ما وظيفة الهيكل العظمي؟",["الهضم","دعم الجسم","صنع الغذاء","توليد الضوء"],1],["ما الذي يجذب الأجسام نحو الأرض؟",["الحرارة","الضوء","الجاذبية","الصوت"],2],["ما التغير الذي يصنعه تبريد الماء بشدة؟",["التبخر","التجمد","الاحتراق","التكاثف فقط"],1],["أي الكواكب أقرب إلى الشمس؟",["الأرض","عطارد","المشتري","نبتون"],1]]},"6":{"math":[["ما ناتج ٣/٤ + ١/٤؟",["١/٢","١","٣/٨","٢"],1],["ما ناتج ١٢ × ١٥؟",["١٢٠","١٥٠","١٨٠","٢٠٠"],2],["كم يساوي ٢٥٪ من ٢٠٠؟",["٢٥","٤٠","٥٠","٧٥"],2],["ما مساحة مستطيل طوله ٨ وعرضه ٥ سم؟",["١٣","٢٦","٤٠","٨٠"],2],["ما ناتج ٣٫٥ + ٢٫٧؟",["٥٫٢","٦٫٢","٦٫٧","٧٫٢"],1],["ما القاسم المشترك الأكبر للعددين ١٢ و١٨؟",["٣","٦","٩","١٢"],1],["ما ناتج ١٤٤ ÷ ١٢؟",["١٠","١١","١٢","١٤"],2],["كم يساوي ٢/٥ من ٣٠؟",["٦","١٠","١٢","١٥"],2],["ما قيمة ٧²؟",["١٤","٤٢","٤٩","٧٧"],2],["إذا كان ٣س = ٢١، فما قيمة س؟",["٦","٧","٨","٩"],1],["ما متوسط الأعداد: ٤، ٦، ٨؟",["٥","٦","٧","٨"],1],["ما محيط مستطيل طوله ٩ وعرضه ٤؟",["١٣","٢٦","٣٦","٤٠"],1],["أي كسور الآتية أكبر؟",["١/٢","١/٤","١/٨","١/١٠"],0],["ما ناتج ٥ × (٦ + ٢)؟",["٣٢","٣٨","٤٠","٤٨"],2],["ما العدد التالي: ٢، ٤، ٨، ١٦، ...؟",["٢٠","٢٤","٣٠","٣٢"],3],["ما حجم مكعب طول حرفه ٣ سم؟",["٩","١٨","٢٧","٣٦"],2],["ما ناتج ٧٫٢ - ٣٫٨؟",["٣٫٤","٣٫٦","٤٫٤","٤٫٦"],0],["ما الكسر المكافئ لـ ١/٢؟",["٢/٣","٣/٦","٤/٦","٣/٤"],1]],"arabic":[["في جملة «قرأ الطالب القصة»، ما المفعول به؟",["قرأ","الطالب","القصة","لا يوجد"],2],["ما مرادف كلمة «شاسع»؟",["ضيق","واسع","قصير","قريب"],1],["ما ضد كلمة «التعاون»؟",["التآزر","التنافس","التخاذل","الاحترام"],2],["أي الجمل تتضمن فعلًا مضارعًا؟",["سافر أبي.","يسافر أبي.","سافروا.","السفر جميل."],1],["أي كلمة جمع مؤنث سالم؟",["معلمات","رجال","أطفال","كتب"],0],["ما نوع كلمة «في»؟",["اسم","فعل","حرف جر","ظرف زمان"],2],["أي الجمل استخدمت علامة التعجب استخدامًا مناسبًا؟",["أين كتابك!","ما أجمل الحديقة!","ذهبت للمدرسة!","هل أتيت!"],1],["ما مرادف كلمة «الإصرار»؟",["التردد","العزيمة","التعب","النسيان"],1],["اختر الجملة الاسمية.",["وصل القطار.","حضر المعلم.","العلم نور.","اكتب الدرس."],2],["ما نوع الفعل «استمع»؟",["ماضٍ","مضارع","أمر","اسم"],0],["ما مفرد كلمة «مصابيح»؟",["مصباح","صباح","مصباحون","مصابيح"],0],["أي الكلمات كتبت همزتها على ألف؟",["إيمان","سؤال","بئر","شيء"],0],["في «المطر غزير»، ما الخبر؟",["المطر","غزير","ال","لا يوجد"],1],["ما ضد كلمة «النادر»؟",["القليل","المألوف","الغريب","المفقود"],1],["أي الجمل فيها أسلوب نهي؟",["لا تهمل واجبك.","اجتهد في درسك.","هل فهمت؟","ليتني أنجح."],0],["ما جمع كلمة «مدينة»؟",["مدينتان","مدن","مديني","مدينة"],1],["ما مرادف كلمة «يتأمل»؟",["ينظر بتفكر","يجري","يصرخ","ينام"],0],["أي كلمة تدل على اسم مكان؟",["مكتبة","مكتوب","كتب","يكتب"],0]],"science":[["ما وحدة قياس القوة؟",["المتر","النيوتن","الواط","اللتر"],1],["ما العضية التي تنتج معظم طاقة الخلية؟",["النواة","الميتوكوندريا","الجدار الخلوي","الفجوة"],1],["ما التغير الذي يعد تفاعلًا كيميائيًا؟",["انصهار الثلج","تبخر الماء","صدأ الحديد","قطع الورق"],2],["ما الغاز الذي تحتاجه النباتات للبناء الضوئي؟",["الأكسجين","النيتروجين","ثاني أكسيد الكربون","الهيليوم"],2],["ما الكوكب المعروف بحلقاته الواضحة؟",["الزهرة","زحل","عطارد","الأرض"],1],["أي مما يلي موصل جيد للكهرباء؟",["الخشب","النحاس","البلاستيك","الزجاج"],1],["أي أجهزة الجسم ينقل الأكسجين والغذاء؟",["الدوري","الهيكلي","العصبي","الجلدي"],0],["ما وظيفة الأوراق في النبات؟",["امتصاص التربة","صنع الغذاء","تثبيت النبات","حماية الجذور"],1],["ماذا ينتج عن دوران الأرض حول محورها؟",["الفصول","الليل والنهار","المد والجزر فقط","السنة"],1],["ما الحالة التي تأخذ شكل الوعاء وحجمًا ثابتًا؟",["الصلبة","السائلة","الغازية","البلازما"],1],["ما العضو الذي ينقي الدم ويكون البول؟",["الكليتان","الرئتان","القلب","المعدة"],0],["ما اسم تحول بخار الماء إلى قطرات؟",["التبخر","التكاثف","الانصهار","التجمد"],1],["ما القوة التي تعارض حركة الأجسام المتلامسة؟",["الجاذبية","المغناطيسية","الاحتكاك","الدفع فقط"],2],["ما الجزء المسؤول عن التحكم في أنشطة الخلية؟",["النواة","الغشاء فقط","السيتوبلازم","الجدار"],0],["أي مصادر الطاقة متجدد؟",["الفحم","النفط","الرياح","الغاز الطبيعي"],2],["ما نوع العلاقة بين النحلة والزهرة غالبًا؟",["تطفل","تبادل منفعة","افتراس","تنافس فقط"],1],["ما وحدة قياس الكتلة؟",["الثانية","الكيلوجرام","المتر","اللتر"],1],["أي طبقات الأرض هي الطبقة الخارجية الصلبة؟",["اللب","الوشاح","القشرة","الغلاف الجوي"],2]]},"9":{"math":[["إذا كان ٢س + ٥ = ١٧، فما قيمة س؟",["٥","٦","٧","٨"],1],["ما ناتج (٣² + ٤²)؟",["١٢","١٨","٢٥","٤٩"],2],["ما ميل المستقيم المار بـ (٠،٠) و(٢،٦)؟",["٢","٣","٤","٦"],1],["إذا كان ٥س = ٤٠، فما قيمة س؟",["٦","٧","٨","٩"],2],["حل المعادلة س - ٩ = ١٣.",["٤","١٨","٢٢","٢٤"],2],["ما الجذر التربيعي للعدد ١٤٤؟",["١٠","١١","١٢","١٤"],2],["أي الأعداد غير نسبي؟",["١/٢","√٢","٠٫٧٥","٣"],1],["ما ناتج ٢³ × ٢²؟",["١٦","٢٤","٣٢","٦٤"],2],["إذا كان ص = ٣س + ٢، فما ص عندما س = ٤؟",["١٠","١٢","١٤","١٦"],2],["ما مساحة مثلث قاعدته ١٠ وارتفاعه ٦؟",["١٦","٣٠","٦٠","١٢٠"],1],["ما احتمال ظهور عدد زوجي عند رمي نرد عادل؟",["١/٦","١/٣","١/٢","٢/٣"],2],["ما قيمة |−٧|؟",["−٧","٠","٧","١٤"],2],["حل المتباينة س + ٣ > ٨.",["س > ٥","س < ٥","س > ١١","س < ١١"],0],["ما ناتج (س + ٢)(س + ٣)؟",["س² + ٥س + ٦","س² + ٦","س² + س + ٥","س² + ٦س + ٥"],0],["إذا تضاعف نصف قطر دائرة، فبكم تتضاعف المساحة؟",["مرتين","٣ مرات","٤ مرات","٨ مرات"],2],["ما ناتج ٠٫٢٥ × ٨٠؟",["١٠","١٥","٢٠","٢٥"],2],["ما العدد الذي يحقق ٣(س - ٢)=١٢؟",["٤","٥","٦","٨"],2],["ما متوسط القيم: ٥، ٧، ٩، ١١؟",["٧","٨","٩","١٠"],1]],"arabic":[["ما نوع الأسلوب في «لا تهمل واجبك»؟",["أمر","نهي","تعجب","نداء"],1],["أي الجمل تحتوي على مفعول مطلق؟",["نجح الطالب.","سار الرجل سيرًا سريعًا.","في البيت ضيف.","السماء صافية."],1],["ما معنى كلمة «تجلّى» في «تجلّى الحق»؟",["اختفى","ظهر","تأخر","ضعف"],1],["ما إعراب «المعلمُ» في «حضر المعلمُ»؟",["مفعول به","فاعل مرفوع","مبتدأ","خبر"],1],["اختر التعبير الأكثر ترابطًا.",["أحب القراءة لأنها توسع المعرفة.","أحب القراءة رغم أن.","أحب القراءة لكن لأن.","أحب القراءة ثم لأن."],0],["ما ضد كلمة «الازدهار»؟",["التقدم","النمو","التدهور","النجاح"],2],["أي الكلمات اسم فاعل؟",["مكتوب","كاتب","مكتب","كتاب"],1],["ما الغرض من الفكرة الرئيسة في النص؟",["شرح تفصيل صغير","تحديد الموضوع العام","ذكر مثال واحد","إعادة العنوان فقط"],1],["أي الجمل تحتوي على أسلوب شرط؟",["إن تدرس تنجح.","هل تدرس؟","ما أجمل العلم!","ادرس جيدًا."],0],["ما المرادف الأقرب لـ «الانضباط»؟",["الفوضى","الالتزام","التردد","النسيان"],1],["ما نوع «إنّ» في «إنّ العلم نور»؟",["حرف توكيد ونصب","حرف جر","فعل ماضٍ","اسم موصول"],0],["أي الجمل تتضمن تشبيهًا؟",["العلم نور.","البحر كمرآة صافية.","ذهب الطالب.","عاد المسافر."],1],["ما المقصود بالاستنتاج من النص؟",["نسخ العبارات","استخلاص معنى من أدلته","حفظ العنوان","تجاهل التفاصيل"],1],["أي كلمة اسم مفعول؟",["مفهوم","فاهم","يفهم","افهم"],0],["ما جمع التكسير لكلمة «عالم»؟",["عالمون","علمين","علماء","عالمات"],2],["ما وظيفة علامة الفاصلة المنقوطة «؛» غالبًا؟",["إنهاء الاستفهام","الفصل بين جملتين بينهما سبب ونتيجة","نهاية التعجب","بداية الحوار"],1],["أي الجمل تتضمن حالًا؟",["عاد الطالب مسرورًا.","المطر غزير.","في المدرسة طالب.","هذا بيت كبير."],0],["ما ضد «الإيجاز» في التعبير؟",["الاختصار","الإطناب","الوضوح","الدقة"],1]],"science":[["ما وظيفة الميتوكوندريا في الخلية؟",["صنع البروتين","إنتاج الطاقة","تخزين الصفات","نقل الإشارات"],1],["ما وحدة قياس شدة التيار الكهربائي؟",["الفولت","الأمبير","الأوم","الجول"],1],["ما الجسيم ذو الشحنة السالبة؟",["بروتون","نيوترون","إلكترون","نواة"],2],["ما اسم انقسام الخلية الذي ينتج خليتين متماثلتين؟",["الانقسام المتساوي","الانقسام المنصف","الإخصاب","التلقيح"],0],["إذا زادت المسافة في زمن ثابت، فما الذي يحدث للسرعة؟",["تقل","تزيد","تبقى دائمًا ثابتة","تصبح صفرًا"],1],["أي مما يلي مثال على تغير كيميائي؟",["ذوبان الجليد","احتراق الخشب","تبخر الماء","تقطيع الورق"],1],["ما دور الحمض النووي DNA؟",["نقل الأكسجين","حمل المعلومات الوراثية","هضم الغذاء","توليد الحرارة"],1],["ما الرقم الهيدروجيني للمحلول المتعادل تقريبًا؟",["١","٣","٧","١٤"],2],["ما قانون حساب الكثافة؟",["الكتلة ÷ الحجم","الحجم ÷ الكتلة","الكتلة × الحجم","القوة ÷ المسافة"],0],["ما العضية التي تصنع البروتينات؟",["الريبوسومات","الفجوات","الليزوسومات","الجدار"],0],["ما نوع الطاقة المخزنة في جسم مرتفع؟",["حركية","وضع","صوتية","ضوئية"],1],["ما نوع الروابط التي تنتج عن مشاركة الإلكترونات؟",["أيونية","تساهمية","فلزية","مغناطيسية"],1],["متى يحدث التكاثف؟",["يتحول الغاز إلى سائل","يتحول الصلب إلى غاز","يتحول السائل إلى صلب","يتحول الصلب إلى سائل"],0],["ما الجهاز المسؤول عن تنظيم استجابة الجسم السريعة؟",["الهضمي","العصبي","الهيكلي","التنفسي"],1],["ما اتجاه انتقال الحرارة تلقائيًا؟",["من البارد إلى الساخن","من الساخن إلى البارد","لا تنتقل","في اتجاه واحد دائمًا"],1],["ما الكمية التي تقاس بوحدة الواط؟",["القدرة","الكتلة","الضغط","الزمن"],0],["ما النتيجة العامة للانقسام المنصف؟",["خلايا متماثلة وراثيًا","خلايا بنصف عدد الكروموسومات","خليتان متماثلتان فقط","توقف النمو"],1],["ما العامل الذي يزيد سرعة التفاعل عادة؟",["خفض الحرارة دائمًا","زيادة درجة الحرارة","تقليل التلامس","إزالة المتفاعلات"],1]]}};
+
+</script>
+<script>
+/* Nafis Plus V4 – automatic bubble-grid reader. Offline, no server uploads.
+ * Finds the 10 x 4 printed bubbles instead of trusting a second layout's CSS positions. */
+(() => {
+'use strict';
+function solve(a,b){const v=a.map((row,i)=>row.concat([b[i]]));for(let i=0;i<8;i++){let q=i;for(let k=i+1;k<8;k++)if(Math.abs(v[k][i])>Math.abs(v[q][i]))q=k;if(Math.abs(v[q][i])<1e-8)throw Error('invalid perspective');[v[i],v[q]]=[v[q],v[i]];const s=v[i][i];for(let j=i;j<=8;j++)v[i][j]/=s;for(let k=0;k<8;k++){if(k===i)continue;const f=v[k][i];for(let j=i;j<=8;j++)v[k][j]-=f*v[i][j]}}return v.map(row=>row[8])}
+function perspective(corners){const uv=[[0,0],[1,0],[1,1],[0,1]],a=[],b=[];uv.forEach(([u,v],i)=>{const {x,y}=corners[i];a.push([u,v,1,0,0,0,-u*x,-v*x]);b.push(x);a.push([0,0,0,u,v,1,-u*y,-v*y]);b.push(y)});const h=solve(a,b);return(u,v)=>{const d=h[6]*u+h[7]*v+1;return {x:(h[0]*u+h[1]*v+h[2])/d,y:(h[3]*u+h[4]*v+h[5])/d}}}
+function detectPaper(canvas){
+ const scale=Math.min(1,440/Math.max(canvas.width,canvas.height));
+ const w=Math.max(24,Math.round(canvas.width*scale)),h=Math.max(24,Math.round(canvas.height*scale));
+ const sm=document.createElement('canvas');sm.width=w;sm.height=h;
+ const c=sm.getContext('2d',{willReadFrequently:true});c.drawImage(canvas,0,0,w,h);
+ const src=c.getImageData(0,0,w,h).data,mask=new Uint8Array(w*h),visited=new Uint8Array(w*h),stack=new Int32Array(w*h);
+ let whiteCount=0;
+ for(let p=0;p<w*h;p++){const j=p*4,r=src[j],g=src[j+1],b=src[j+2];const lum=.2126*r+.7152*g+.0722*b, ch=Math.max(r,g,b)-Math.min(r,g,b);const yes=lum>165&&ch<62;mask[p]=yes?1:0;whiteCount+=yes?1:0}
+ let best=null;
+ for(let i=0;i<mask.length;i++){
+  if(!mask[i]||visited[i])continue;
+  let head=0,tail=1;stack[0]=i;visited[i]=1;
+  let minSum=1e8,maxSum=-1e8,minDiff=1e8,maxDiff=-1e8,points=[null,null,null,null];let minx=w,maxx=0,miny=h,maxy=0;
+  while(head<tail){const z=stack[head++],x=z%w,y=(z/w)|0,s=x+y,d=x-y;
+   if(s<minSum){minSum=s;points[0]={x,y}}if(d>maxDiff){maxDiff=d;points[1]={x,y}}if(s>maxSum){maxSum=s;points[2]={x,y}}if(d<minDiff){minDiff=d;points[3]={x,y}}
+   if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
+   if(x>0&&mask[z-1]&&!visited[z-1]){visited[z-1]=1;stack[tail++]=z-1}
+   if(x+1<w&&mask[z+1]&&!visited[z+1]){visited[z+1]=1;stack[tail++]=z+1}
+   if(y>0&&mask[z-w]&&!visited[z-w]){visited[z-w]=1;stack[tail++]=z-w}
+   if(y+1<h&&mask[z+w]&&!visited[z+w]){visited[z+w]=1;stack[tail++]=z+w}
+  }
+  if(!best||tail>best.size)best={size:tail,points,minx,maxx,miny,maxy};
+ }
+ if(!best||best.size<w*h*.18)return {ok:false,reason:'paper-not-found'};
+ const p=best.points,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+ const pw=(dist(p[0],p[1])+dist(p[2],p[3]))/2,ph=(dist(p[0],p[3])+dist(p[1],p[2]))/2;
+ const ratio=ph/Math.max(1,pw),full=(best.maxx-best.minx)*(best.maxy-best.miny)/(w*h);
+ if(pw<w*.36||ph<h*.36||ratio<.9||ratio>2.15)return {ok:false,reason:'paper-orientation'};
+ return {ok:true,corners:p.map(v=>({x:v.x/scale,y:v.y/scale})),coverage:full,white:whiteCount/(w*h),ratio};
+}
+function normalizedImage(canvas,corners){
+ const W=650,H=920, out=new Uint8Array(W*H), src=canvas.getContext('2d',{willReadFrequently:true}).getImageData(0,0,canvas.width,canvas.height),data=src.data;
+ const f=perspective(corners),sw=canvas.width,sh=canvas.height;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const p=f((x+.5)/W,(y+.5)/H),sx=p.x,sy=p.y;
+  if(sx<0||sy<0||sx>=sw-1||sy>=sh-1){out[y*W+x]=255;continue}
+  const x0=sx|0,y0=sy|0,dx=sx-x0,dy=sy-y0,k=(y0*sw+x0)*4;
+  const lum=j=>data[j]*.2126+data[j+1]*.7152+data[j+2]*.0722;
+  const a=lum(k)*(1-dx)+lum(k+4)*dx,b=lum(k+sw*4)*(1-dx)+lum(k+sw*4+4)*dx;
+  out[y*W+x]=Math.round(a*(1-dy)+b*dy);
+ }
+ return {W,H,gray:out};
+}
+function components(im,threshold){
+ const {W,H,gray}=im,mask=new Uint8Array(W*H),stack=new Int32Array(W*H),cands=[];
+ for(let k=0;k<mask.length;k++)mask[k]=gray[k]<threshold?1:0;
+ for(let i=0;i<mask.length;i++){
+  if(mask[i]!==1)continue;
+  let hd=0,tl=1;stack[0]=i;mask[i]=2;let minx=W,maxx=0,miny=H,maxy=0,sx=0,sy=0;
+  while(hd<tl){const z=stack[hd++],x=z%W,y=(z/W)|0;
+   sx+=x;sy+=y;if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
+   if(x>0&&mask[z-1]===1){mask[z-1]=2;stack[tl++]=z-1}
+   if(x+1<W&&mask[z+1]===1){mask[z+1]=2;stack[tl++]=z+1}
+   if(y>0&&mask[z-W]===1){mask[z-W]=2;stack[tl++]=z-W}
+   if(y+1<H&&mask[z+W]===1){mask[z+W]=2;stack[tl++]=z+W}
+  }
+  const bw=maxx-minx+1,bh=maxy-miny+1;
+  if(bw>=10&&bw<=27&&bh>=10&&bh<=27&&bw/bh>.67&&bw/bh<1.45&&tl>=24&&tl<=420){
+   const x=sx/tl,y=sy/tl;
+   // Bubble zones are in the interior of a portrait exam, not the title/footer.
+   if(x>W*.07&&x<W*.985&&y>H*.14&&y<H*.96)cands.push({x,y,bw,bh,area:tl,weight:1});
+  }
+ }
+ return cands;
+}
+function detectBubbles(im){
+ const {W,H,gray}=im;
+ let candidates=[];
+ for(const threshold of [190,208,224])for(const c of components(im,threshold)){
+  const prev=candidates.find(p=>Math.abs(p.x-c.x)<6&&Math.abs(p.y-c.y)<6);
+  if(prev){prev.weight=Math.min(1.8,prev.weight+.18);if(threshold===208){prev.x=(prev.x+c.x)/2;prev.y=(prev.y+c.y)/2;prev.bw=(prev.bw+c.bw)/2;prev.bh=(prev.bh+c.bh)/2}}
+  else candidates.push(c);
+ }
+ // X peak histogram of approximately circular components.
+ const xHist=new Float32Array(W),r=10;
+ for(const p of candidates){for(let k=Math.max(0,Math.floor(p.x)-r);k<=Math.min(W-1,Math.ceil(p.x)+r);k++)xHist[k]+=p.weight*Math.max(0,1-Math.abs(k-p.x)/(r+1))}
+ let bestX={score:-1,right:0,step:0};
+ for(let right=Math.round(W*.77);right<=W*.99;right+=2)for(let step=Math.round(W*.18);step<=Math.round(W*.29);step+=2){
+  if(right-3*step<W*.045)continue;
+  const xScore=xHist[right]+xHist[right-step]+xHist[right-2*step]+xHist[right-3*step];
+  if(xScore>bestX.score)bestX={score:xScore,right,step};
+ }
+ const cols=[0,1,2,3].map(i=>bestX.right-bestX.step*i);
+ const narrow=candidates.filter(p=>cols.some(x=>Math.abs(p.x-x)<13));
+ const yHist=new Float32Array(H);
+ for(const p of narrow)for(let k=Math.max(0,Math.floor(p.y)-10);k<=Math.min(H-1,Math.ceil(p.y)+10);k++)yHist[k]+=p.weight*Math.max(0,1-Math.abs(k-p.y)/11);
+ let bestY={score:-1,first:0,step:0};
+ for(let first=Math.round(H*.165);first<=Math.round(H*.34);first+=2)for(let step=Math.round(H*.055);step<=Math.round(H*.087);step++){
+  if(first+9*step>H*.955)continue;
+  let score=0;for(let q=0;q<10;q++)score+=yHist[first+q*step];
+  if(score>bestY.score)bestY={score,first,step};
+ }
+ const centers=[],matched=[];
+ for(let row=0;row<10;row++){
+  const y=bestY.first+bestY.step*row,one=[];
+  for(const x of cols){const near=candidates.filter(p=>Math.abs(p.x-x)<13&&Math.abs(p.y-y)<12).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y));
+   const p=near[0]||null;one.push(p?{x:p.x,y:p.y,r:Math.min(10,Math.max(5,(p.bw+p.bh)/4)),found:true}:{x,y,r:7,found:false});
+  }
+  centers.push(one);
+ }
+ const found=centers.flat().filter(x=>x.found).length;
+ const supportedRows=centers.filter(row=>row.filter(p=>p.found).length>=3).length;
+ return {ok:found>=26&&supportedRows>=7,centers,found,supportedRows,xScore:bestX.score,yScore:bestY.score,candidates:candidates.length};
+}
+function readAnswers(im,grid){
+ const {W,H,gray}=im,answers=[],confidence=[];
+ for(const row of grid.centers){
+  const densities=row.map(({x,y,r,found})=>{
+   if(!found)return 0;
+   let sum=0,count=0;
+   const rad=r*.52;
+   for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){
+    if(dx*dx+dy*dy>9)continue;
+    const xx=Math.round(x+dx*rad/3),yy=Math.round(y+dy*rad/3);
+    if(xx>=0&&xx<W&&yy>=0&&yy<H){sum+=Math.max(0,1-gray[yy*W+xx]/255);count++}
+   }
+   return count?sum/count:0;
+  });
+  const sorted=densities.map((value,index)=>({value,index})).sort((a,b)=>b.value-a.value);
+  const max=sorted[0],second=sorted[1],margin=max.value-second.value;
+  const confident=row.filter(p=>p.found).length>=3&&row[max.index].found&&max.value>.23&&margin>.115;
+  answers.push(confident?max.index:null);
+  confidence.push({densities,margin,confident});
+ }
+ return {answers,confidence,recognized:answers.filter(v=>v!==null).length};
+}
+function scan(canvas,_centers){
+ const paper=detectPaper(canvas);
+ if(!paper.ok)return {ok:false,reason:paper.reason,answers:Array(10).fill(null),confidence:[]};
+ const normalized=normalizedImage(canvas,paper.corners),grid=detectBubbles(normalized);
+ if(!grid.ok)return {ok:false,reason:'grid-not-found',paper,grid:{found:grid.found,supportedRows:grid.supportedRows}};
+ return {ok:true,paper,grid:{found:grid.found,supportedRows:grid.supportedRows},...readAnswers(normalized,grid)};
+}
+window.NafisOMR={scan,detectPaper,detectBubbles};
+})();
 
 </script>
 <script>
@@ -136,24 +289,44 @@ function openExam(n){state.returnView=(state.view==='home'?'home':'exams');state
 function scanSelectors(){const grade=$('scanGrade'),subject=$('scanSubject'),exam=$('scanExam');grade.innerHTML=Object.entries(grades).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');subject.innerHTML=Object.entries(subjects).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');exam.innerHTML=Array.from({length:6},(_,i)=>`<option value="${i+1}">النموذج ${ar(i+1)}</option>`).join('');[grade,subject,exam].forEach(sel=>sel.addEventListener('change',()=>{state.grade=grade.value;state.subject=subject.value;state.exam=Number(exam.value);refreshSheet();renderCatalog();resetReview();}));syncScanSelectors()}
 function syncScanSelectors(){$('scanGrade').value=state.grade;$('scanSubject').value=state.subject;$('scanExam').value=String(state.exam)}
 function openGrading(){syncScanSelectors();resetReview();showView('grading')}
-function resetReview(){state.answers=Array(10).fill(null);state.scanConfidence=[];state.corners=[];$('reviewPanel').classList.add('hidden');$('scanWorkspace').classList.add('hidden');$('scanNow').disabled=true;$('scanStatus').textContent='حدّد الزاوية الأولى للبدء.';$('imageInput').value='';state.photo=null}
+function resetReview(){state.answers=Array(10).fill(null);state.scanConfidence=[];state.corners=[];$('reviewPanel').classList.add('hidden');$('scanWorkspace').classList.add('hidden');$('scanNow').disabled=false;$('scanStatus').textContent='اختر صورة لبدء القراءة التلقائية.';$('imageInput').value='';state.photo=null}
 function startReview(answers=Array(10).fill(null),confidence=[]){state.answers=answers.slice(0,10).map(x=>Number.isInteger(x)&&x>=0&&x<=3?x:null);state.scanConfidence=confidence;$('reviewPanel').classList.remove('hidden');renderReview();$('reviewPanel').scrollIntoView({behavior:'smooth',block:'start'})}
-function renderReview(){const qs=queryQuestions();$('reviewQuestions').innerHTML=qs.map((q,i)=>{const value=state.answers[i];const correct=value===q[2];let chip=value===null?'لم تُحدد':(correct?'صحيحة':'غير صحيحة');return `<div class="review-item"><div class="review-item-head"><span>السؤال ${ar(i+1)}</span><span class="mark-chip ${value===null?'':correct?'correct':'incorrect'}">${chip}</span></div><div class="answer-choices">${letters.map((l,j)=>`<button data-q="${i}" data-opt="${j}" class="${value===j?'picked':''}" title="الإجابة ${l}">${l}</button>`).join('')}<button data-q="${i}" data-opt="-1" title="بدون إجابة">—</button></div><div class="answer-key-note">الإجابة الصحيحة: ${letters[q[2]]}</div></div>`}).join('');$('reviewQuestions').querySelectorAll('button[data-q]').forEach(b=>b.addEventListener('click',()=>{state.answers[Number(b.dataset.q)]=Number(b.dataset.opt)<0?null:Number(b.dataset.opt);renderReview()}));const score=qs.reduce((acc,q,i)=>acc+(state.answers[i]===q[2]?1:0),0);$('scoreBox').textContent=`${ar(score)} / ١٠`;$('unclearCount').textContent=`${ar(state.answers.filter(x=>x===null).length)} إجابة غير محددة · راجعها قبل حفظ النتيجة`}
+function renderReview(){const qs=queryQuestions();$('reviewQuestions').innerHTML=qs.map((q,i)=>{const value=state.answers[i];const correct=value===q[2];let chip=value===null?'تحتاج مراجعة':(correct?'صحيحة':'غير صحيحة');return `<div class="review-item"><div class="review-item-head"><span>السؤال ${ar(i+1)}</span><span class="mark-chip ${value===null?'':correct?'correct':'incorrect'}">${chip}</span></div><div class="answer-choices">${letters.map((l,j)=>`<button data-q="${i}" data-opt="${j}" class="${value===j?'picked':''}" title="الإجابة ${l}">${l}</button>`).join('')}<button data-q="${i}" data-opt="-1" title="بدون إجابة">—</button></div><div class="answer-key-note">الإجابة الصحيحة: ${letters[q[2]]}</div></div>`}).join('');$('reviewQuestions').querySelectorAll('button[data-q]').forEach(b=>b.addEventListener('click',()=>{state.answers[Number(b.dataset.q)]=Number(b.dataset.opt)<0?null:Number(b.dataset.opt);renderReview()}));const score=qs.reduce((acc,q,i)=>acc+(state.answers[i]===q[2]?1:0),0);$('scoreBox').textContent=`${ar(score)} / ١٠`;$('unclearCount').textContent=`${ar(state.answers.filter(x=>x===null).length)} إجابة فارغة أو غير واضحة · راجعها قبل حفظ النتيجة`}
 function resultObject(){const qs=queryQuestions();return {id:Date.now(),when:new Date().toLocaleString('ar-SA'),name:$('studentName').value.trim()||'طالب بدون اسم',grade:state.grade,subject:state.subject,exam:state.exam,score:qs.reduce((acc,q,i)=>acc+(state.answers[i]===q[2]?1:0),0),answers:[...state.answers],correct:qs.map(q=>q[2])}}
 function getHistory(){try{return JSON.parse(localStorage.getItem('nafis_results_v2')||'[]')}catch(_){return volatileHistory}}
 function saveResult(){const data=resultObject();try{const list=getHistory();list.unshift(data);volatileHistory=list.slice(0,500);localStorage.setItem('nafis_results_v2',JSON.stringify(volatileHistory));toast(`تم حفظ نتيجة ${data.name}: ${ar(data.score)} من ١٠`)}catch(e){if(!volatileHistory.some(r=>r.id===data.id))volatileHistory.unshift(data);toast('تم حفظ النتيجة مؤقتًا. نزّل ملف CSV للاحتفاظ بها بعد إغلاق الصفحة.')}}
 function csvEscape(s){return `"${String(s).replaceAll('"','""')}"`}
 function exportCSV(rows,name){if(!rows.length){toast('لا توجد نتائج للتصدير.');return}const head=['التاريخ','اسم الطالب','الصف','المادة','النموذج','الدرجة','الإجابات','الإجابات الصحيحة'];const lines=[head,...rows.map(x=>[x.when,x.name,grades[x.grade],subjects[x.subject],x.exam,x.score,x.answers.map(v=>v===null?'—':letters[v]).join(' / '),x.correct.map(v=>letters[v]).join(' / ')])];const blob=new Blob(['\ufeff'+lines.map(line=>line.map(csvEscape).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('تم تجهيز ملف CSV للتنزيل')}
 function renderHistory(){const all=getHistory();if(!all.length){$('historyContent').innerHTML='<div class="empty-state"><div style="font-size:36px">▤</div><strong>لا توجد نتائج محفوظة بعد</strong><span>صحّح أول ورقة واحفظها لتظهر هنا.</span></div>';return}$('historyContent').innerHTML=`<table class="result-table"><thead><tr><th>الطالب</th><th>الصف</th><th>المادة</th><th>النموذج</th><th>الدرجة</th><th>التاريخ</th></tr></thead><tbody>${all.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(grades[x.grade]||'')}</td><td>${esc(subjects[x.subject]||'')}</td><td>${ar(x.exam)}</td><td><strong>${ar(x.score)} / ١٠</strong></td><td>${esc(x.when)}</td></tr>`).join('')}</tbody></table>`}
-// Marker detection: map normalized paper coordinates to the photo through a four-corner homography.
-function solveLinear(A,b){const m=A.map((r,i)=>[...r,b[i]]);for(let col=0;col<8;col++){let best=col;for(let r=col+1;r<8;r++)if(Math.abs(m[r][col])>Math.abs(m[best][col]))best=r;[m[col],m[best]]=[m[best],m[col]];if(Math.abs(m[col][col])<1e-8)throw Error('Unable to align photo corners');const div=m[col][col];for(let c=col;c<=8;c++)m[col][c]/=div;for(let r=0;r<8;r++){if(r===col)continue;const factor=m[r][col];for(let c=col;c<=8;c++)m[r][c]-=factor*m[col][c]}}return m.map(r=>r[8])}
-function homography(corners){const uv=[[0,0],[1,0],[1,1],[0,1]];let A=[],b=[];uv.forEach(([u,v],i)=>{const {x,y}=corners[i];A.push([u,v,1,0,0,0,-u*x,-v*x]);b.push(x);A.push([0,0,0,u,v,1,-u*y,-v*y]);b.push(y)});const h=solveLinear(A,b);return (u,v)=>{const z=h[6]*u+h[7]*v+1;return {x:(h[0]*u+h[1]*v+h[2])/z,y:(h[3]*u+h[4]*v+h[5])/z}}}
+// Read printed bubble positions from the exact A4 CSS template.
 function getCircleCenters(){refreshSheet();const page=$('measureSheet').getBoundingClientRect();return Array.from({length:10},(_,i)=>Array.from({length:4},(_,j)=>{const r=$('measureSheet').querySelector(`.bubble[data-q="${i}"][data-opt="${j}"]`).getBoundingClientRect();return {u:(r.left+r.width/2-page.left)/page.width,v:(r.top+r.height/2-page.top)/page.height}}))}
-function analyzePhoto(){if(!state.photo||state.corners.length!==4)return;try{const map=homography(state.corners);const imageData=state.photo.getContext('2d',{willReadFrequently:true}).getImageData(0,0,state.photo.width,state.photo.height);const {data,width,height}=imageData;const sample=(u,v)=>{const p=map(u,v),x=Math.round(p.x),y=Math.round(p.y);if(x<1||y<1||x>=width||y>=height)return 0;const idx=(y*width+x)*4;return 1-(data[idx]*.2126+data[idx+1]*.7152+data[idx+2]*.0722)/255};const centers=getCircleCenters();const answers=[],conf=[];for(let i=0;i<10;i++){const densities=centers[i].map(({u,v})=>{let sum=0,total=0;for(let yy=-3;yy<=3;yy++)for(let xx=-3;xx<=3;xx++){if(xx*xx+yy*yy>9)continue;sum+=sample(u+(xx/3)*(1.12/210),v+(yy/3)*(1.12/297));total++}return sum/total});const sorted=densities.map((x,i)=>({x,i})).sort((a,b)=>b.x-a.x);const max=sorted[0],second=sorted[1];const confident=max.x>0.23&&max.x-second.x>0.09;answers.push(confident?max.i:null);conf.push({densities,confident})}$('scanStatus').textContent='انتهى فحص الدوائر. تأكد من الإجابات قبل اعتمادها.';startReview(answers,conf)}catch(err){console.error(err);$('scanStatus').textContent='تعذرت قراءة الصورة، جرّب إعادة اختيار الزوايا أو أدخل الإجابات يدويًا.';toast('تعذّر تحليل الصورة. يمكنك التصحيح يدويًا.') }}
-function drawCanvas(){if(!state.photo)return;const src=state.photo,cv=$('photoCanvas'),ctx=cv.getContext('2d');cv.width=src.width;cv.height=src.height;ctx.drawImage(src,0,0);const r=Math.max(5,src.width/190);ctx.lineWidth=Math.max(2,r/3);ctx.strokeStyle='#00c3bd';ctx.fillStyle='#00c3bd';for(let i=0;i<state.corners.length;i++){const p=state.corners[i];ctx.beginPath();ctx.arc(p.x,p.y,r,0,2*Math.PI);ctx.fill();ctx.strokeStyle='white';ctx.stroke();ctx.fillStyle='white';ctx.font=`bold ${Math.max(12,r*1.6)}px Arial`;ctx.textAlign='center';ctx.fillText(String(i+1),p.x,p.y+r*.4);ctx.fillStyle='#00c3bd'}if(state.corners.length>=2){ctx.beginPath();ctx.strokeStyle='#00b49b';ctx.lineWidth=Math.max(2,r/2);ctx.moveTo(state.corners[0].x,state.corners[0].y);for(let i=1;i<state.corners.length;i++)ctx.lineTo(state.corners[i].x,state.corners[i].y);if(state.corners.length===4)ctx.closePath();ctx.stroke()}}
-function resetCorners() {state.corners=[];$('scanNow').disabled=true;$('cornerCount').textContent='١';$('scanStatus').textContent='حدّد الزاوية الأولى للبدء.';drawCanvas()}
-function loadFile(file){if(!file)return;if(!file.type.startsWith('image/')){toast('اختر ملف صورة JPG أو PNG.');return}if(file.size>22*1024*1024){toast('الصورة كبيرة جدًا. اختر صورة أقل من ٢٢ ميجابايت.');return}const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const ratio=Math.min(1,2000/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(img.width*ratio));cv.height=Math.max(1,Math.round(img.height*ratio));cv.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(url);state.photo=cv;$('scanWorkspace').classList.remove('hidden');$('reviewPanel').classList.add('hidden');resetCorners();$('scanWorkspace').scrollIntoView({behavior:'smooth',block:'start'})};img.onerror=()=>{URL.revokeObjectURL(url);toast('تعذّر فتح هذه الصورة. جرّب JPG أو PNG.')};img.src=url}
-function init(){renderCatalog();scanSelectors();refreshSheet();document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.view==='grading')openGrading();else showView(b.dataset.view)}));$('welcomeStart').onclick=()=>showView('exams');$('backToExams').onclick=()=>showView(state.returnView);$('printBtn').onclick=()=>{window.print()};$('gradeThisBtn').onclick=openGrading;$('manualBtn').onclick=()=>{state.photo=null;$('scanWorkspace').classList.add('hidden');startReview()};$('imageInput').onchange=ev=>loadFile(ev.target.files?.[0]);$('photoCanvas').addEventListener('click',ev=>{if(!state.photo||state.corners.length===4)return;const r=ev.currentTarget.getBoundingClientRect();const x=(ev.clientX-r.left)*state.photo.width/r.width;const y=(ev.clientY-r.top)*state.photo.height/r.height;state.corners.push({x,y});$('cornerCount').textContent=ar(Math.min(state.corners.length+1,4));$('scanStatus').textContent=state.corners.length===4?'جاهز لقراءة الدوائر.':`تم تحديد ${ar(state.corners.length)} من ٤ زوايا.`;$('scanNow').disabled=state.corners.length!==4;drawCanvas()});$('resetCorners').onclick=resetCorners;$('scanNow').onclick=analyzePhoto;$('saveResult').onclick=saveResult;$('exportResult').onclick=()=>exportCSV([resultObject()],`nafis_result_${Date.now()}.csv`);$('exportHistory').onclick=()=>exportCSV(getHistory(),'nafis_results.csv');const drop=$('dropZone');drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag-over')});drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');loadFile(e.dataTransfer.files[0])});const params=new URLSearchParams(location.search);if(params.get('paper')==='1'){const g=params.get('grade'),s=params.get('subject'),e=Number(params.get('exam'));if(grades[g]&&subjects[s]&&e>=1&&e<=6){state.grade=g;state.subject=s;state.exam=e;renderCatalog();syncScanSelectors();openExam(e)}}else{showView('home')}}
+function drawCanvas(){if(!state.photo)return;const src=state.photo,cv=$('photoCanvas'),ctx=cv.getContext('2d');cv.width=src.width;cv.height=src.height;ctx.drawImage(src,0,0);if(state.corners&&state.corners.length===4){ctx.lineWidth=Math.max(3,src.width/340);ctx.strokeStyle='#03bc94';ctx.beginPath();ctx.moveTo(state.corners[0].x,state.corners[0].y);state.corners.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.closePath();ctx.stroke()}}
+function resetScanView(){state.corners=[];state.scanConfidence=[];state.answers=Array(10).fill(null);$('reviewPanel').classList.add('hidden');$('scanStatus').textContent='جارٍ تجهيز الصورة للقراءة التلقائية…'}
+function analyzePhoto(){
+ if(!state.photo)return;
+ $('scanStatus').textContent='يتم الآن كشف الورقة وفحص الدوائر تلقائيًا…';
+ $('scanNow').disabled=true;
+ setTimeout(()=>{
+  try{
+   const result=window.NafisOMR.scan(state.photo,getCircleCenters());
+   state.corners=result.paper?.corners||[];drawCanvas();
+   if(!result.ok){$('reviewPanel').classList.add('hidden');$('scanStatus').textContent=result.reason==='grid-not-found'?'تم العثور على الورقة ولكن لم نستطع تحديد شبكة دوائر الإجابات. اختر صورة الورقة كاملة وتأكد أن النموذج يحتوي على ١٠ أسئلة بأربع خيارات.':result.reason==='paper-orientation'?'تعذّر التعرف على اتجاه الورقة. صوّرها بالطول ومن الأعلى مع خلفية مختلفة.':'لم نتمكن من اكتشاف حدود الورقة تلقائيًا. صوّر الورقة كاملة فوق سطح داكن أو ملون.';return}
+   if(result.recognized===0){$('reviewPanel').classList.add('hidden');$('scanStatus').textContent='تم اكتشاف الورقة، لكن لم تُقرأ أي دائرة بثقة. تأكد من أن الصورة للاختبار المحدد وأن الدوائر مظللة، أو اختر «مراجعة الإجابات يدويًا». لا تُمنح درجة تلقائية لهذه الصورة.';return}
+   $('scanStatus').textContent=`تمت قراءة ${ar(result.recognized)} من ١٠ إجابات تلقائيًا. تأكد من الصف والمادة ورقم النموذج، ثم راجع الإجابات قبل حفظ النتيجة.`;
+   startReview(result.answers,result.confidence);
+  }catch(err){console.error('Auto OMR scan failed:',err);$('reviewPanel').classList.add('hidden');$('scanStatus').textContent='تعذّرت قراءة هذه الصورة. جرّب صورة أوضح أو استخدم المراجعة اليدوية.'}
+  finally{$('scanNow').disabled=false}
+ },40);
+}
+function loadFile(file){
+ if(!file)return;
+ if(!file.type.startsWith('image/')){toast('اختر صورة بصيغة JPG أو PNG.');return}
+ if(file.size>22*1024*1024){toast('الصورة كبيرة جدًا. اختر صورة أصغر من ٢٢ ميجابايت.');return}
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{const ratio=Math.min(1,2000/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(img.width*ratio));cv.height=Math.max(1,Math.round(img.height*ratio));cv.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(url);state.photo=cv;resetScanView();$('scanWorkspace').classList.remove('hidden');drawCanvas();$('scanWorkspace').scrollIntoView({behavior:'smooth',block:'start'});analyzePhoto()};
+ img.onerror=()=>{URL.revokeObjectURL(url);toast('تعذّر فتح هذه الصورة. جرّب JPG أو PNG.')};img.src=url;
+}
+function init(){renderCatalog();scanSelectors();refreshSheet();document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.view==='grading')openGrading();else showView(b.dataset.view)}));$('welcomeStart').onclick=()=>showView('exams');$('backToExams').onclick=()=>showView(state.returnView);$('printBtn').onclick=()=>{window.print()};$('gradeThisBtn').onclick=openGrading;$('manualBtn').onclick=()=>{state.photo=null;$('scanWorkspace').classList.add('hidden');startReview()};$('imageInput').onchange=ev=>loadFile(ev.target.files?.[0]);$('scanNow').onclick=analyzePhoto;$('manualReview').onclick=()=>startReview();$('saveResult').onclick=saveResult;$('exportResult').onclick=()=>exportCSV([resultObject()],`nafis_result_${Date.now()}.csv`);$('exportHistory').onclick=()=>exportCSV(getHistory(),'nafis_results.csv');const drop=$('dropZone');drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag-over')});drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');loadFile(e.dataTransfer.files[0])});const params=new URLSearchParams(location.search);if(params.get('paper')==='1'){const g=params.get('grade'),s=params.get('subject'),e=Number(params.get('exam'));if(grades[g]&&subjects[s]&&e>=1&&e<=6){state.grade=g;state.subject=s;state.exam=e;renderCatalog();syncScanSelectors();openExam(e)}}else{showView('home')}}
 init();
 })();
 
